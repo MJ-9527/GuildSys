@@ -1,26 +1,25 @@
+//package main
+//
+//import "github.com/MJ-9527/GulidSys/internal/api"
+//
+//func main() {
+//	r := api.NewRouter()
+//	err := r.Run(":8080")
+//	if err != nil {
+//		return
+//	}
+//}
+
 package main
 
 import (
-	"log"
+	"fmt"
 
-	"github.com/MJ-9527/GulidSys/internal/pkg/db"
-	"github.com/gin-gonic/gin"
+	"github.com/MJ-9527/GulidSys/internal/service"
 )
 
 func main() {
-	err := db.InitDB("root", "123456", "127.0.0.1:3306", "guild_system")
-	if err != nil {
-		log.Fatal("数据库连接失败:", err)
-	}
 
-	r := gin.Default()
-
-	// 用户模块路由
-	userGroup := r.Group("/api/users")
-	{
-		userGroup.POST("/register", registerHandler)
-		userGroup.POST("/login", loginHandler)
-	}
-
-	r.Run(":8080")
+	u, err := service.RegisterUser("alice", "123456")
+	fmt.Println(u, err)
 }
