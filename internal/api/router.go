@@ -13,5 +13,6 @@ func NewRouter() *gin.Engine {
 
 	// /user/register 用户注册路由
 	r.POST("/user/register", handler.RegisterUserHandler)
+
 	return r
 }

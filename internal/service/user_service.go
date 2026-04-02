@@ -3,11 +3,12 @@ package service
 import (
 	"errors"
 
+	"github.com/MJ-9527/GulidSys/internal/model"
 	"github.com/MJ-9527/GulidSys/internal/repo"
 	"golang.org/x/crypto/bcrypt"
 )
 
-func RegisterUser(username, password string) (*repo.User, error) {
+func RegisterUser(username, password string) (*model.User, error) {
 	// 检查用户是否存在
 	if _, err := repo.GetUserByUsername(username); err == nil {
 		return nil, errors.New("username already exists")
@@ -20,7 +21,7 @@ func RegisterUser(username, password string) (*repo.User, error) {
 	}
 
 	//创建用户对象
-	user := &repo.User{
+	user := &model.User{
 		Username: username,
 		Password: string(hashedPassword),
 		Role:     "member", //默认普通成员

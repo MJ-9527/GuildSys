@@ -34,9 +34,12 @@ func RegisterUserHandler(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"code":     http.StatusOK,
-		"id":       user.ID,
-		"username": user.Username,
-		"role":     user.Role,
+		"code":    http.StatusOK,
+		"message": "success",
+		"data": gin.H{
+			"id":       user.ID,
+			"username": user.Username,
+			"role":     user.Role,
+		},
 	})
 }
