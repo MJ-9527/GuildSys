@@ -1,5 +1,11 @@
 package model
 
+const (
+	RoleLeader = "leader"
+	RoleAdmin  = "admin"
+	RoleMember = "member"
+)
+
 type Guild struct {
 	ID     int64  `json:"id"`
 	Name   string `json:"name"`

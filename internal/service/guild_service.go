@@ -25,16 +25,30 @@ func CreateGuild(name string, leaderID int64) (*model.Guild, error) {
 	return guild, nil
 }
 
-// JoinGuild 加入工会
-func JoinGuild(guildID, userID int64) error {
-	// 检测是否有同名工会
+// JoinGuild 加入工会（只有Leader/Admin可以邀请成员）
+func JoinGuild(inviterID, guildID, userID int64) error {
+	// 检测工会是否存在
 	guild, err := repo.GetGuildByID(guildID)
 	if err != nil {
 		return ErrGuildNotFound
 	}
 
-	// 检测是否已加入工会
+	// 获取邀请人角色
 	members, _ := repo.GetMembersByGuild(guild.ID)
+	var inviterRole string
+	for _, m := range members {
+		if m.UserID == inviterID {
+			inviterRole = m.Role
+			break
+		}
+	}
+
+	// 权限判断
+	if inviterRole != model.RoleLeader && inviterRole != model.RoleAdmin {
+		return errors.New("permission denied")
+	}
+
+	// 检测是否已加入工会
 	for _, m := range members {
 		if m.UserID == userID {
 			return errors.New("already joined the guild")

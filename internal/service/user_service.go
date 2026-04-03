@@ -8,6 +8,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+// RegisterUser 注册用户
 func RegisterUser(username, password string) (*model.User, error) {
 	// 检查用户是否存在
 	if _, err := repo.GetUserByUsername(username); err == nil {
@@ -32,5 +33,21 @@ func RegisterUser(username, password string) (*model.User, error) {
 		return nil, err
 	}
 
+	return user, nil
+}
+
+// Login 用户登录
+func Login(username, password string) (*model.User, error) {
+	// 查用户
+	user, err := repo.GetUserByUsername(username)
+	if err != nil {
+		return nil, errors.New("user not found")
+	}
+
+	// 校验密码
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
+	if err != nil {
+		return nil, errors.New("invalid password")
+	}
 	return user, nil
 }

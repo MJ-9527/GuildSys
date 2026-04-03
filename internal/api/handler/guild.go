@@ -9,20 +9,27 @@ import (
 
 // CreateGuildHandler 创建工会
 func CreateGuildHandler(c *gin.Context) {
+	leaderID := c.GetInt64("leader_id")
 	var req struct {
-		Name   string `json:"name"`
-		Leader int64  `json:"leader"`
+		Name string `json:"name"`
 	}
 
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"code":    http.StatusBadRequest,
-			"message": "invalid request body",
+			"message": "invalid request",
 		})
 		return
 	}
 
-	guild, err := service.CreateGuild(req.Name, req.Leader)
+	if req.Name == "" {
+		c.JSON(http.StatusOK, gin.H{
+			"code":    http.StatusBadRequest,
+			"message": "name request",
+		})
+	}
+
+	guild, err := service.CreateGuild(req.Name, leaderID)
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"code":    http.StatusBadRequest,
@@ -43,6 +50,7 @@ func CreateGuildHandler(c *gin.Context) {
 }
 
 func JoinGuildHandler(c *gin.Context) {
+	inviterID := c.GetInt64("user_id")
 	var req struct {
 		GuildID int64 `json:"guild_id"`
 		UserID  int64 `json:"user_id"`
@@ -67,7 +75,7 @@ func JoinGuildHandler(c *gin.Context) {
 	}
 
 	// 调用 service
-	err := service.JoinGuild(req.GuildID, req.UserID)
+	err := service.JoinGuild(inviterID, req.GuildID, req.UserID)
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"code":    http.StatusBadRequest,

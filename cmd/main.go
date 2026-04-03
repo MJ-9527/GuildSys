@@ -1,10 +1,6 @@
 package main
 
-import (
-	"fmt"
-
-	"github.com/MJ-9527/GulidSys/internal/repo"
-)
+import "github.com/MJ-9527/GulidSys/internal/service"
 
 func main() {
 	//r := api.NewRouter()
@@ -12,15 +8,14 @@ func main() {
 	//if err != nil {
 	//	return
 	//}
-	g, err := repo.CreateGuild("Knights", 4562)
-	fmt.Println(g, err)
 
-	g2, err2 := repo.GetGuildByID(1)
-	fmt.Println(g2, err2)
+	_, err := service.RegisterUser("123", "9735")
+	if err != nil {
+		return
+	}
 
-	m, err := repo.AddMember(1, 2, "member")
-	fmt.Println(m, err)
-
-	members, _ := repo.GetMembersByGuild(1)
-	fmt.Println(members)
+	_, err = service.Login("123", "9735")
+	if err != nil {
+		return
+	}
 }
